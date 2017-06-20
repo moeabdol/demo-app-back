@@ -1,5 +1,5 @@
 class PostsController < ApplicationController
-  before_action :find_post, only: [:show]
+  before_action :find_post, only: [:show, :update]
 
   def index
     @posts = Post.order("created_at DESC")
@@ -14,6 +14,14 @@ class PostsController < ApplicationController
     @post = Post.new(post_params)
     if @post.save
       render json: @post, status: :created
+    else
+      render json: @post.errors, status: :unprocessable_entity
+    end
+  end
+
+  def update
+    if @post.update(post_params)
+      render json: @post, status: :ok
     else
       render json: @post.errors, status: :unprocessable_entity
     end
